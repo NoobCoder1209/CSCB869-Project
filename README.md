@@ -1,32 +1,32 @@
-# Electronic Medical Records System (CSCB869)
+# Електронни медицински досиета (CSCB869)
 
-A Spring Boot web application for managing electronic medical records, developed as a course project for CSCB869 at New Bulgarian University.
+Уеб приложение на Spring Boot за управление на електронни медицински досиета, разработено като курсов проект по CSCB869 в Нов Български Университет.
 
 ## Tech Stack
 
-| Component        | Technology                          |
+| Компонент        | Технология                          |
 |------------------|-------------------------------------|
 | Backend          | Spring Boot 3.2.5                   |
-| Language         | Java 17                             |
+| Език             | Java 17                             |
 | Template Engine  | Thymeleaf + Layout Dialect 3.3.0    |
 | CSS              | Tailwind CSS (CDN)                  |
-| Database         | H2 (file-based)                     |
-| Security         | Spring Security 6 (form login, BCrypt) |
-| Build Tool       | Maven (with Maven Wrapper)          |
+| База данни       | H2 (file-based)                     |
+| Сигурност        | Spring Security 6 (form login, BCrypt) |
+| Build Tool       | Maven (с Maven Wrapper)             |
 | ORM              | Spring Data JPA / Hibernate         |
 
-## Quick Start
+## Бързо стартиране
 
 ```bash
 cd medical-record
 ./mvnw spring-boot:run
 ```
 
-Open [http://localhost:8080](http://localhost:8080) in your browser.
+Отворете [http://localhost:8080](http://localhost:8080) в браузъра.
 
-## Demo Credentials
+## Демо потребители
 
-| Username     | Password    | Role    |
+| Username     | Password    | Роля    |
 |--------------|-------------|---------|
 | admin        | admin123    | Admin   |
 | dr.petrov    | doctor123   | Doctor  |
@@ -35,44 +35,62 @@ Open [http://localhost:8080](http://localhost:8080) in your browser.
 | patient1     | patient123  | Patient |
 | patient2     | patient123  | Patient |
 
-## Features
+## Функционалности
 
-- **Patient Management** -- CRUD operations, personal doctor assignment, insurance status
-- **Doctor Management** -- CRUD with specialty and GP designation
-- **Diagnosis Catalog** -- ICD-10 coded diagnoses
-- **Examinations** -- Full visit records linking doctor, patient, diagnosis, and treatment
-- **Sick Leaves** -- Issue and track medical leave certificates
-- **Insurance Tracking** -- Monthly payment records with 6-month coverage validation
-- **11 Reports** -- Statistical queries (patients by diagnosis, most common diagnosis, payments per doctor, visit history, sick leave statistics, etc.)
-- **Role-Based Access** -- Admin, Doctor, and Patient dashboards with method-level security
-- **Bulgarian UI** -- All interface labels and data in Bulgarian
+- **Управление на пациенти** — CRUD операции, назначаване на личен лекар, осигурителен статус
+- **Управление на лекари** — CRUD със специалност и маркиране като ОПЛ
+- **Каталог с диагнози** — диагнози по МКБ-10
+- **Прегледи** — пълни записи за посещения с лекар, пациент, диагноза и лечение
+- **Болнични листове** — издаване и проследяване на болнични
+- **Осигуровки** — месечни плащания с валидация за 6-месечно покритие
+- **11 справки** — статистически заявки (пациенти по диагноза, най-честа диагноза, плащания по лекар, история на посещенията, статистика за болничните и др.)
+- **Ролеви достъп** — табла за администратор, лекар и пациент с контрол на ниво метод
+- **Български интерфейс** — всички етикети и данни на български
 
-## Project Structure
+## Структура на проекта
 
 ```
 medical-record/
 ├── src/main/java/bg/medicalrecord/
 │   ├── config/          # SecurityConfig, DataInitializer
-│   ├── controller/      # MVC controllers (10 controllers)
+│   ├── controller/      # MVC контролери (10 контролера)
 │   ├── dto/             # Data transfer objects + report DTOs
-│   ├── exception/       # Global exception handling
+│   ├── exception/       # Глобална обработка на грешки
 │   ├── model/           # JPA entities + enums
 │   ├── repository/      # Spring Data JPA repositories
-│   └── service/         # Business logic (8 services)
+│   └── service/         # Бизнес логика (8 сервиса)
 ├── src/main/resources/
-│   ├── templates/       # Thymeleaf HTML templates
+│   ├── templates/       # Thymeleaf HTML шаблони
 │   └── application.properties
 └── pom.xml
 ```
 
-## Database Console
+## Конзола на базата данни
 
-H2 console is available at [http://localhost:8080/h2-console](http://localhost:8080/h2-console) (admin only).
+H2 конзолата е достъпна на [http://localhost:8080/h2-console](http://localhost:8080/h2-console) (само за admin).
 
 - JDBC URL: `jdbc:h2:file:./data/medicaldb`
 - Username: `sa`
-- Password: *(empty)*
+- Password: *(празна)*
 
-## License
+## Тестове
 
-University course project. Not intended for production use.
+```bash
+cd medical-record
+./mvnw test
+```
+
+53 теста (unit + integration) — всички минават успешно.
+
+## Документация
+
+Подробната документация на български се намира в папка `Documentation/`:
+
+1. [Описание на проекта](Documentation/1-ProjectDescription.md)
+2. [Ръководство за потребителя](Documentation/2-UserManual.md)
+3. [Описание на базата данни](Documentation/3-DatabaseDescription.md)
+4. [Външни компоненти](Documentation/4-ExternalComponents.md)
+
+## Лиценз
+
+Курсов проект. Не е предназначен за продуктивна употреба.

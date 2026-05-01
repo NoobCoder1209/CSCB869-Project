@@ -26,9 +26,9 @@ public class DoctorController {
         this.userService = userService;
     }
 
-    // Списък на всички лекари (само за администратор)
+    // Списък на всички лекари (администратор и лекар)
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'DOCTOR')")
     public String list(Model model) {
         model.addAttribute("doctors", doctorService.findAll());
         return "doctors/list";

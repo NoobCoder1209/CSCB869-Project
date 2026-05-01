@@ -132,11 +132,12 @@ class DoctorControllerTest {
     }
 
     @Test
-    @DisplayName("GET /doctors - лекар няма достъп до пълния списък")
+    @DisplayName("GET /doctors - лекар има достъп до списъка с лекари")
     @WithMockUser(roles = "DOCTOR")
-    void list_doctorRole_forbidden() throws Exception {
+    void list_doctorRole_allowed() throws Exception {
+        when(doctorService.findAll()).thenReturn(java.util.Collections.emptyList());
         mockMvc.perform(get("/doctors"))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isOk());
     }
 
     // === Тест за неавтентикиран потребител ===
