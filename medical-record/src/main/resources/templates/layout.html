@@ -25,123 +25,94 @@
                 <div class="hidden md:flex items-center space-x-4">
 
                     <!-- Само за анонимни (неаутентицирани) -->
-                    <sec:authorize access="isAnonymous()">
-                        <a th:href="@{/login}"
-                           class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
-                            Вход
-                        </a>
-                    </sec:authorize>
+                    <a sec:authorize="isAnonymous()" th:href="@{/login}"
+                       class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
+                        Вход
+                    </a>
 
                     <!-- Начало за аутентицирани -->
-                    <sec:authorize access="isAuthenticated()">
+                    <div sec:authorize="isAuthenticated()" style="display:contents">
                         <!-- Начало - различни URL-и по роля -->
-                        <sec:authorize access="hasRole('ADMIN')">
-                            <a th:href="@{/admin}"
-                               class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
-                                Начало
-                            </a>
-                        </sec:authorize>
-                        <sec:authorize access="hasRole('DOCTOR')">
-                            <a th:href="@{/doctor}"
-                               class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
-                                Начало
-                            </a>
-                        </sec:authorize>
-                        <sec:authorize access="hasRole('PATIENT')">
-                            <a th:href="@{/patient}"
-                               class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
-                                Начало
-                            </a>
-                        </sec:authorize>
+                        <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin}"
+                           class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
+                            Начало
+                        </a>
+                        <a sec:authorize="hasRole('DOCTOR')" th:href="@{/doctor}"
+                           class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
+                            Начало
+                        </a>
+                        <a sec:authorize="hasRole('PATIENT')" th:href="@{/patient}"
+                           class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
+                            Начало
+                        </a>
 
                         <!-- Лекари: Администратор и Лекар -->
-                        <sec:authorize access="hasAnyRole('ADMIN', 'DOCTOR')">
-                            <a th:href="@{/doctors}"
-                               class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
-                                Лекари
-                            </a>
-                        </sec:authorize>
+                        <a sec:authorize="hasAnyRole('ADMIN', 'DOCTOR')" th:href="@{/doctors}"
+                           class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
+                            Лекари
+                        </a>
 
                         <!-- Пациенти: Администратор и Лекар -->
-                        <sec:authorize access="hasAnyRole('ADMIN', 'DOCTOR')">
-                            <a th:href="@{/patients}"
-                               class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
-                                Пациенти
-                            </a>
-                        </sec:authorize>
+                        <a sec:authorize="hasAnyRole('ADMIN', 'DOCTOR')" th:href="@{/patients}"
+                           class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
+                            Пациенти
+                        </a>
 
                         <!-- Диагнози: само Администратор -->
-                        <sec:authorize access="hasRole('ADMIN')">
-                            <a th:href="@{/diagnoses}"
-                               class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
-                                Диагнози
-                            </a>
-                        </sec:authorize>
+                        <a sec:authorize="hasRole('ADMIN')" th:href="@{/diagnoses}"
+                           class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
+                            Диагнози
+                        </a>
 
                         <!-- Прегледи: Администратор и Лекар -->
-                        <sec:authorize access="hasAnyRole('ADMIN', 'DOCTOR')">
-                            <a th:href="@{/examinations}"
-                               class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
-                                Прегледи
-                            </a>
-                        </sec:authorize>
+                        <a sec:authorize="hasAnyRole('ADMIN', 'DOCTOR')" th:href="@{/examinations}"
+                           class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
+                            Прегледи
+                        </a>
 
                         <!-- Болнични: Администратор и Лекар -->
-                        <sec:authorize access="hasAnyRole('ADMIN', 'DOCTOR')">
-                            <a th:href="@{/sick-leaves}"
-                               class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
-                                Болнични
-                            </a>
-                        </sec:authorize>
+                        <a sec:authorize="hasAnyRole('ADMIN', 'DOCTOR')" th:href="@{/sick-leaves}"
+                           class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
+                            Болнични
+                        </a>
 
                         <!-- Отчети: Администратор и Лекар -->
-                        <sec:authorize access="hasAnyRole('ADMIN', 'DOCTOR')">
-                            <a th:href="@{/reports}"
-                               class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
-                                Отчети
-                            </a>
-                        </sec:authorize>
+                        <a sec:authorize="hasAnyRole('ADMIN', 'DOCTOR')" th:href="@{/reports}"
+                           class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
+                            Отчети
+                        </a>
 
                         <!-- Осигуровки: само Администратор -->
-                        <sec:authorize access="hasRole('ADMIN')">
-                            <a th:href="@{/insurance}"
-                               class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
-                                Осигуровки
-                            </a>
-                        </sec:authorize>
+                        <a sec:authorize="hasRole('ADMIN')" th:href="@{/insurance}"
+                           class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
+                            Осигуровки
+                        </a>
 
                         <!-- Потребители: само Администратор -->
-                        <sec:authorize access="hasRole('ADMIN')">
-                            <a th:href="@{/admin/users}"
-                               class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
-                                Потребители
-                            </a>
-                        </sec:authorize>
+                        <a sec:authorize="hasRole('ADMIN')" th:href="@{/admin/users}"
+                           class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
+                            Потребители
+                        </a>
 
                         <!-- Моите прегледи: само Пациент -->
-                        <sec:authorize access="hasRole('PATIENT')">
-                            <a th:href="@{/examinations}"
-                               class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
-                                Моите прегледи
-                            </a>
-                        </sec:authorize>
-                    </sec:authorize>
-                </div>
+                        <a sec:authorize="hasRole('PATIENT')" th:href="@{/examinations}"
+                           class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
+                            Моите прегледи
+                        </a>
+                    </div>
             </div>
 
             <!-- Потребителска информация и изход -->
             <div class="flex items-center space-x-4">
-                <sec:authorize access="isAuthenticated()">
-                    <span class="text-sm text-blue-200">
-                        <sec:authentication property="name"/>
-                    </span>
-                    <form th:action="@{/logout}" method="post" class="inline">
-                        <button type="submit"
-                                class="px-3 py-2 bg-red-600 rounded hover:bg-red-700 transition-colors text-sm font-medium">
-                            Изход
-                        </button>
-                    </form>
-                </sec:authorize>
+                <span sec:authorize="isAuthenticated()" class="text-sm text-blue-200">
+                    <sec:authentication property="name"/>
+                </span>
+                <form sec:authorize="isAuthenticated()" th:action="@{/logout}" method="post" class="inline">
+                    <button type="submit"
+                            class="px-3 py-2 bg-red-600 rounded hover:bg-red-700 transition-colors text-sm font-medium">
+                        Изход
+                    </button>
+                </form>
             </div>
         </div>
     </div>
