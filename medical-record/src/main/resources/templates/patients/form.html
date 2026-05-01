@@ -4,7 +4,7 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       layout:decorate="~{layout}">
 <head>
-    <title th:text="${patientDto.id != null ? 'Редактиране на пациент' : 'Нов пациент'}">Форма пациент</title>
+    <title th:text="${patientId != null ? 'Редактиране на пациент' : 'Нов пациент'}">Форма пациент</title>
 </head>
 <body>
 <div layout:fragment="content">
@@ -34,7 +34,7 @@
                        th:field="*{fullName}"
                        th:classappend="${#fields.hasErrors('fullName')} ? 'border-red-500' : 'border-gray-300'"
                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
-                       placeholder="Въведете пълното ime"/>
+                       placeholder="Въведете пълното име"/>
                 <p th:if="${#fields.hasErrors('fullName')}"
                    th:errors="*{fullName}"
                    class="mt-1 text-sm text-red-600"></p>
