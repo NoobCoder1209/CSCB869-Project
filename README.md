@@ -72,7 +72,3 @@ H2 console is available at [http://localhost:8080/h2-console](http://localhost:8
 - JDBC URL: `jdbc:h2:file:./data/medicaldb`
 - Username: `sa`
 - Password: *(empty)*
-
-## License
-
-University course project. Not intended for production use.
