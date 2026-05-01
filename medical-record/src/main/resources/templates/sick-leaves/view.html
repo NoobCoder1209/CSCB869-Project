@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="bg"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout}">
+<head>
+    <title>Детайли на болничен лист</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-3xl font-bold text-gray-800">Болничен лист</h1>
+        <a th:href="@{/sick-leaves}"
+           class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-lg transition-colors">
+            &larr; Назад
+        </a>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- Данни за болничния лист -->
+        <div class="bg-white rounded-xl shadow p-8">
+            <h2 class="text-lg font-semibold text-gray-700 mb-5 pb-2 border-b border-gray-200">Данни за болничния лист</h2>
+            <div class="grid grid-cols-1 gap-4">
+
+                <div class="flex border-b border-gray-100 pb-3">
+                    <span class="w-44 text-sm font-semibold text-gray-500 uppercase tracking-wide">Начална дата</span>
+                    <span class="text-gray-800"
+                          th:text="${#temporals.format(sickLeave.startDate, 'dd.MM.yyyy')}"></span>
+                </div>
+
+                <div class="flex border-b border-gray-100 pb-3">
+                    <span class="w-44 text-sm font-semibold text-gray-500 uppercase tracking-wide">Брой дни</span>
+                    <span class="text-gray-800 font-semibold" th:text="${sickLeave.numberOfDays}"></span>
+                </div>
+
+                <div class="flex">
+                    <span class="w-44 text-sm font-semibold text-gray-500 uppercase tracking-wide">Крайна дата</span>
+                    <span class="text-gray-800"
+                          th:text="${#temporals.format(sickLeave.startDate.plusDays(sickLeave.numberOfDays - 1), 'dd.MM.yyyy')}"></span>
+                </div>
+            </div>
+
+            <!-- Действия -->
+            <div class="mt-8 flex space-x-3">
+                <sec:authorize access="hasAnyRole('ADMIN', 'DOCTOR')">
+                    <a th:href="@{/sick-leaves/{id}/edit(id=${sickLeave.id})}"
+                       class="px-5 py-2 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded-lg transition-colors">
+                        Редактиране
+                    </a>
+                    <form th:action="@{/sick-leaves/{id}/delete(id=${sickLeave.id})}" method="post"
+                          onsubmit="return confirm('Сигурни ли сте, че искате да изтриете този болничен лист?')">
+                        <button type="submit"
+                                class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors">
+                            Изтриване
+                        </button>
+                    </form>
+                </sec:authorize>
+            </div>
+        </div>
+
+        <!-- Свързан преглед -->
+        <div class="bg-white rounded-xl shadow p-8" th:if="${sickLeave.examination != null}">
+            <h2 class="text-lg font-semibold text-gray-700 mb-5 pb-2 border-b border-gray-200">Свързан преглед</h2>
+            <div class="grid grid-cols-1 gap-4">
+
+                <div class="flex border-b border-gray-100 pb-3">
+                    <span class="w-44 text-sm font-semibold text-gray-500 uppercase tracking-wide">Дата</span>
+                    <span class="text-gray-800"
+                          th:text="${#temporals.format(sickLeave.examination.examinationDate, 'dd.MM.yyyy')}"></span>
+                </div>
+
+                <div class="flex border-b border-gray-100 pb-3">
+                    <span class="w-44 text-sm font-semibold text-gray-500 uppercase tracking-wide">Пациент</span>
+                    <span class="text-gray-800"
+                          th:text="${sickLeave.examination.patient?.fullName}"></span>
+                </div>
+
+                <div class="flex border-b border-gray-100 pb-3">
+                    <span class="w-44 text-sm font-semibold text-gray-500 uppercase tracking-wide">Лекар</span>
+                    <span class="text-gray-800"
+                          th:text="${sickLeave.examination.doctor?.fullName}"></span>
+                </div>
+
+                <div class="flex">
+                    <span class="w-44 text-sm font-semibold text-gray-500 uppercase tracking-wide">Диагноза</span>
+                    <span class="text-gray-800">
+                        <span th:if="${sickLeave.examination.diagnosis != null}">
+                            <span class="font-mono font-semibold text-purple-700"
+                                  th:text="${sickLeave.examination.diagnosis.code}"></span>
+                            <span class="ml-1" th:text="${sickLeave.examination.diagnosis.description}"></span>
+                        </span>
+                    </span>
+                </div>
+            </div>
+
+            <div class="mt-6">
+                <a th:href="@{/examinations/{id}(id=${sickLeave.examination.id})}"
+                   class="inline-block px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors">
+                    Виж прегледа
+                </a>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

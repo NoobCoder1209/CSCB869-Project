@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="bg"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Отчети и справки</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">Отчети и справки</h1>
+        <p class="text-gray-500 mt-1">Изберете желания отчет от списъка по-долу</p>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+
+        <!-- 1. Пациенти с определена диагноза -->
+        <a th:href="@{/reports/patients-by-diagnosis}"
+           class="bg-white rounded-xl shadow hover:shadow-md p-6 flex items-start space-x-4 transition-shadow group">
+            <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center text-blue-700 font-bold text-lg flex-shrink-0">1</div>
+            <div>
+                <h3 class="font-semibold text-gray-800 group-hover:text-blue-700 transition-colors">
+                    Пациенти с определена диагноза
+                </h3>
+                <p class="text-sm text-gray-500 mt-1">Покажи всички пациенти, диагностицирани с избрана диагноза</p>
+            </div>
+        </a>
+
+        <!-- 2. Най-честа диагноза -->
+        <a th:href="@{/reports/most-common-diagnosis}"
+           class="bg-white rounded-xl shadow hover:shadow-md p-6 flex items-start space-x-4 transition-shadow group">
+            <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center text-green-700 font-bold text-lg flex-shrink-0">2</div>
+            <div>
+                <h3 class="font-semibold text-gray-800 group-hover:text-green-700 transition-colors">
+                    Най-честа диагноза
+                </h3>
+                <p class="text-sm text-gray-500 mt-1">Диагнозата с най-много регистрирани случаи в системата</p>
+            </div>
+        </a>
+
+        <!-- 3. Пациенти на определен личен лекар -->
+        <a th:href="@{/reports/patients-by-gp}"
+           class="bg-white rounded-xl shadow hover:shadow-md p-6 flex items-start space-x-4 transition-shadow group">
+            <div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center text-yellow-700 font-bold text-lg flex-shrink-0">3</div>
+            <div>
+                <h3 class="font-semibold text-gray-800 group-hover:text-yellow-700 transition-colors">
+                    Пациенти на личен лекар
+                </h3>
+                <p class="text-sm text-gray-500 mt-1">Всички пациенти, регистрирани при избран ОПЛ</p>
+            </div>
+        </a>
+
+        <!-- 4. Общо платено от пациенти -->
+        <a th:href="@{/reports/patient-payments}"
+           class="bg-white rounded-xl shadow hover:shadow-md p-6 flex items-start space-x-4 transition-shadow group">
+            <div class="w-10 h-10 bg-orange-100 rounded-full flex items-center justify-center text-orange-700 font-bold text-lg flex-shrink-0">4</div>
+            <div>
+                <h3 class="font-semibold text-gray-800 group-hover:text-orange-700 transition-colors">
+                    Общо платено от пациенти
+                </h3>
+                <p class="text-sm text-gray-500 mt-1">Сума на платени прегледи, невъзстановени от НЗОК</p>
+            </div>
+        </a>
+
+        <!-- 5. Плащания по лекари -->
+        <a th:href="@{/reports/payments-by-doctor}"
+           class="bg-white rounded-xl shadow hover:shadow-md p-6 flex items-start space-x-4 transition-shadow group">
+            <div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center text-purple-700 font-bold text-lg flex-shrink-0">5</div>
+            <div>
+                <h3 class="font-semibold text-gray-800 group-hover:text-purple-700 transition-colors">
+                    Плащания по лекари
+                </h3>
+                <p class="text-sm text-gray-500 mt-1">Обща сума на приходи за всеки лекар</p>
+            </div>
+        </a>
+
+        <!-- 6. Брой пациенти на личен лекар -->
+        <a th:href="@{/reports/patients-per-gp}"
+           class="bg-white rounded-xl shadow hover:shadow-md p-6 flex items-start space-x-4 transition-shadow group">
+            <div class="w-10 h-10 bg-teal-100 rounded-full flex items-center justify-center text-teal-700 font-bold text-lg flex-shrink-0">6</div>
+            <div>
+                <h3 class="font-semibold text-gray-800 group-hover:text-teal-700 transition-colors">
+                    Брой пациенти на личен лекар
+                </h3>
+                <p class="text-sm text-gray-500 mt-1">Колко пациенти са регистрирани при всеки ОПЛ</p>
+            </div>
+        </a>
+
+        <!-- 7. Брой посещения по лекар -->
+        <a th:href="@{/reports/visits-per-doctor}"
+           class="bg-white rounded-xl shadow hover:shadow-md p-6 flex items-start space-x-4 transition-shadow group">
+            <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-700 font-bold text-lg flex-shrink-0">7</div>
+            <div>
+                <h3 class="font-semibold text-gray-800 group-hover:text-indigo-700 transition-colors">
+                    Брой посещения по лекар
+                </h3>
+                <p class="text-sm text-gray-500 mt-1">Колко прегледа е провел всеки лекар</p>
+            </div>
+        </a>
+
+        <!-- 8. История на пациент -->
+        <a th:href="@{/reports/patient-history}"
+           class="bg-white rounded-xl shadow hover:shadow-md p-6 flex items-start space-x-4 transition-shadow group">
+            <div class="w-10 h-10 bg-pink-100 rounded-full flex items-center justify-center text-pink-700 font-bold text-lg flex-shrink-0">8</div>
+            <div>
+                <h3 class="font-semibold text-gray-800 group-hover:text-pink-700 transition-colors">
+                    История на пациент
+                </h3>
+                <p class="text-sm text-gray-500 mt-1">Пълна история на прегледите за избран пациент</p>
+            </div>
+        </a>
+
+        <!-- 9. Прегледи по лекар и/или период -->
+        <a th:href="@{/reports/examinations-filter}"
+           class="bg-white rounded-xl shadow hover:shadow-md p-6 flex items-start space-x-4 transition-shadow group">
+            <div class="w-10 h-10 bg-cyan-100 rounded-full flex items-center justify-center text-cyan-700 font-bold text-lg flex-shrink-0">9</div>
+            <div>
+                <h3 class="font-semibold text-gray-800 group-hover:text-cyan-700 transition-colors">
+                    Прегледи по лекар и период
+                </h3>
+                <p class="text-sm text-gray-500 mt-1">Филтрирай прегледи по лекар и/или времеви диапазон</p>
+            </div>
+        </a>
+
+        <!-- 10. Месец с най-много болнични -->
+        <a th:href="@{/reports/month-most-sick-leaves}"
+           class="bg-white rounded-xl shadow hover:shadow-md p-6 flex items-start space-x-4 transition-shadow group">
+            <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center text-red-700 font-bold text-lg flex-shrink-0">10</div>
+            <div>
+                <h3 class="font-semibold text-gray-800 group-hover:text-red-700 transition-colors">
+                    Месец с най-много болнични
+                </h3>
+                <p class="text-sm text-gray-500 mt-1">Кой месец е имал най-много издадени болнични листове</p>
+            </div>
+        </a>
+
+        <!-- 11. Лекар с най-много болнични -->
+        <a th:href="@{/reports/doctor-most-sick-leaves}"
+           class="bg-white rounded-xl shadow hover:shadow-md p-6 flex items-start space-x-4 transition-shadow group">
+            <div class="w-10 h-10 bg-amber-100 rounded-full flex items-center justify-center text-amber-700 font-bold text-lg flex-shrink-0">11</div>
+            <div>
+                <h3 class="font-semibold text-gray-800 group-hover:text-amber-700 transition-colors">
+                    Лекар с най-много болнични
+                </h3>
+                <p class="text-sm text-gray-500 mt-1">Кой лекар е издал най-много болнични листове</p>
+            </div>
+        </a>
+
+    </div>
+
+</div>
+</body>
+</html>

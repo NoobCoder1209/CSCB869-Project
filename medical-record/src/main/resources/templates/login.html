@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="bg"
+      xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Вход - Медицински досиета</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex items-center justify-center">
+
+<div class="w-full max-w-md">
+    <!-- Заглавие -->
+    <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold text-blue-800">Медицински досиета</h1>
+        <p class="text-gray-600 mt-2">Електронна здравна система</p>
+    </div>
+
+    <!-- Форма за вход -->
+    <div class="bg-white rounded-xl shadow-lg p-8">
+        <h2 class="text-2xl font-semibold text-gray-800 mb-6 text-center">Вход в системата</h2>
+
+        <!-- Грешка при вход -->
+        <div th:if="${param.error}"
+             class="mb-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-lg text-sm">
+            Невалидно потребителско име или парола.
+        </div>
+
+        <!-- Успешен изход -->
+        <div th:if="${param.logout}"
+             class="mb-4 p-3 bg-green-100 border border-green-400 text-green-700 rounded-lg text-sm">
+            Успешно излязохте от системата.
+        </div>
+
+        <form th:action="@{/login}" method="post" class="space-y-5">
+            <!-- CSRF token се добавя автоматично от Thymeleaf -->
+
+            <!-- Потребителско име -->
+            <div>
+                <label for="username" class="block text-sm font-medium text-gray-700 mb-1">
+                    Потребителско име
+                </label>
+                <input type="text"
+                       id="username"
+                       name="username"
+                       required
+                       autofocus
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                       placeholder="Въведете потребителско име"/>
+            </div>
+
+            <!-- Парола -->
+            <div>
+                <label for="password" class="block text-sm font-medium text-gray-700 mb-1">
+                    Парола
+                </label>
+                <input type="password"
+                       id="password"
+                       name="password"
+                       required
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                       placeholder="Въведете парола"/>
+            </div>
+
+            <!-- Бутон за вход -->
+            <button type="submit"
+                    class="w-full py-3 bg-blue-700 hover:bg-blue-800 text-white font-semibold rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500">
+                Вход
+            </button>
+        </form>
+    </div>
+
+    <p class="text-center text-gray-500 text-xs mt-6">
+        Електронни медицински досиета &copy; 2025
+    </p>
+</div>
+
+</body>
+</html>

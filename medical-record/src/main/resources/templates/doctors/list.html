@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="bg"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout}">
+<head>
+    <title>Лекари</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-3xl font-bold text-gray-800">Лекари</h1>
+        <sec:authorize access="hasRole('ADMIN')">
+            <a th:href="@{/doctors/new}"
+               class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors">
+                + Нов лекар
+            </a>
+        </sec:authorize>
+    </div>
+
+    <!-- Таблица с лекари -->
+    <div class="bg-white rounded-xl shadow overflow-hidden">
+        <div th:if="${#lists.isEmpty(doctors)}" class="p-8 text-center text-gray-500">
+            Няма намерени лекари.
+        </div>
+        <table th:unless="${#lists.isEmpty(doctors)}" class="w-full text-sm">
+            <thead class="bg-blue-700 text-white">
+                <tr>
+                    <th class="px-4 py-3 text-left font-semibold">УИН</th>
+                    <th class="px-4 py-3 text-left font-semibold">Пълно ime</th>
+                    <th class="px-4 py-3 text-left font-semibold">Специалност</th>
+                    <th class="px-4 py-3 text-center font-semibold">Личен лекар</th>
+                    <sec:authorize access="hasRole('ADMIN')">
+                        <th class="px-4 py-3 text-center font-semibold">Действия</th>
+                    </sec:authorize>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="doctor, stat : ${doctors}"
+                    th:classappend="${stat.even} ? 'bg-gray-50' : 'bg-white'"
+                    class="border-b border-gray-200 hover:bg-blue-50 transition-colors">
+
+                    <td class="px-4 py-3 font-mono text-gray-700" th:text="${doctor.uin}"></td>
+                    <td class="px-4 py-3 font-medium text-gray-800" th:text="${doctor.fullName}"></td>
+                    <td class="px-4 py-3 text-gray-600">
+                        <span th:switch="${doctor.specialty?.name()}">
+                            <span th:case="'GENERAL_PRACTICE'">Обща медицина</span>
+                            <span th:case="'CARDIOLOGY'">Кардиология</span>
+                            <span th:case="'NEUROLOGY'">Неврология</span>
+                            <span th:case="'ORTHOPEDICS'">Ортопедия</span>
+                            <span th:case="'PEDIATRICS'">Педиатрия</span>
+                            <span th:case="'DERMATOLOGY'">Дерматология</span>
+                            <span th:case="'OPHTHALMOLOGY'">Офталмология</span>
+                            <span th:case="'SURGERY'">Хирургия</span>
+                            <span th:case="'PSYCHIATRY'">Психиатрия</span>
+                            <span th:case="'ENDOCRINOLOGY'">Ендокринология</span>
+                            <span th:case="'PULMONOLOGY'">Пулмология</span>
+                            <span th:case="*" th:text="${doctor.specialty}"></span>
+                        </span>
+                    </td>
+                    <td class="px-4 py-3 text-center">
+                        <span th:if="${doctor.gp}"
+                              class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">Да</span>
+                        <span th:unless="${doctor.gp}"
+                              class="px-2 py-1 bg-gray-100 text-gray-500 rounded-full text-xs font-medium">Не</span>
+                    </td>
+                    <sec:authorize access="hasRole('ADMIN')">
+                        <td class="px-4 py-3 text-center">
+                            <div class="flex items-center justify-center space-x-2">
+                                <a th:href="@{/doctors/{id}(id=${doctor.id})}"
+                                   class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-medium transition-colors">
+                                    Преглед
+                                </a>
+                                <a th:href="@{/doctors/{id}/edit(id=${doctor.id})}"
+                                   class="px-3 py-1 bg-yellow-500 hover:bg-yellow-600 text-white rounded text-xs font-medium transition-colors">
+                                    Редактиране
+                                </a>
+                                <form th:action="@{/doctors/{id}/delete(id=${doctor.id})}" method="post"
+                                      onsubmit="return confirm('Сигурни ли сте, че искате да изтриете този лекар?')">
+                                    <button type="submit"
+                                            class="px-3 py-1 bg-red-600 hover:bg-red-700 text-white rounded text-xs font-medium transition-colors">
+                                        Изтриване
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </sec:authorize>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>

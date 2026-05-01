@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="bg"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title th:text="${doctorId != null ? 'Редактиране на лекар' : 'Нов лекар'}">Форма лекар</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-3xl font-bold text-gray-800"
+            th:text="${doctorId != null ? 'Редактиране на лекар' : 'Нов лекар'}">Форма лекар</h1>
+        <a th:href="@{/doctors}"
+           class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-lg transition-colors">
+            &larr; Назад
+        </a>
+    </div>
+
+    <div class="bg-white rounded-xl shadow p-8 max-w-2xl">
+        <form th:action="${doctorId != null ? '/doctors/' + doctorId : '/doctors'}"
+              th:object="${doctorDto}"
+              method="post"
+              class="space-y-6">
+
+            <!-- УИН -->
+            <div>
+                <label for="uin" class="block text-sm font-semibold text-gray-700 mb-1">
+                    УИН <span class="text-red-500">*</span>
+                </label>
+                <input type="text"
+                       id="uin"
+                       th:field="*{uin}"
+                       th:classappend="${#fields.hasErrors('uin')} ? 'border-red-500' : 'border-gray-300'"
+                       class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                       placeholder="Въведете 10-цифрен УИН"/>
+                <p th:if="${#fields.hasErrors('uin')}"
+                   th:errors="*{uin}"
+                   class="mt-1 text-sm text-red-600"></p>
+            </div>
+
+            <!-- Пълно ime -->
+            <div>
+                <label for="fullName" class="block text-sm font-semibold text-gray-700 mb-1">
+                    Пълно ime <span class="text-red-500">*</span>
+                </label>
+                <input type="text"
+                       id="fullName"
+                       th:field="*{fullName}"
+                       th:classappend="${#fields.hasErrors('fullName')} ? 'border-red-500' : 'border-gray-300'"
+                       class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                       placeholder="Въведете пълното ime"/>
+                <p th:if="${#fields.hasErrors('fullName')}"
+                   th:errors="*{fullName}"
+                   class="mt-1 text-sm text-red-600"></p>
+            </div>
+
+            <!-- Специалност -->
+            <div>
+                <label for="specialty" class="block text-sm font-semibold text-gray-700 mb-1">
+                    Специалност <span class="text-red-500">*</span>
+                </label>
+                <select id="specialty"
+                        th:field="*{specialty}"
+                        th:classappend="${#fields.hasErrors('specialty')} ? 'border-red-500' : 'border-gray-300'"
+                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white transition-colors">
+                    <option value="">-- Изберете специалност --</option>
+                    <option value="GENERAL_PRACTICE">Обща медицина</option>
+                    <option value="CARDIOLOGY">Кардиология</option>
+                    <option value="NEUROLOGY">Неврология</option>
+                    <option value="ORTHOPEDICS">Ортопедия</option>
+                    <option value="PEDIATRICS">Педиатрия</option>
+                    <option value="DERMATOLOGY">Дерматология</option>
+                    <option value="OPHTHALMOLOGY">Офталмология</option>
+                    <option value="SURGERY">Хирургия</option>
+                    <option value="PSYCHIATRY">Психиатрия</option>
+                    <option value="ENDOCRINOLOGY">Ендокринология</option>
+                    <option value="PULMONOLOGY">Пулмология</option>
+                </select>
+                <p th:if="${#fields.hasErrors('specialty')}"
+                   th:errors="*{specialty}"
+                   class="mt-1 text-sm text-red-600"></p>
+            </div>
+
+            <!-- Личен лекар -->
+            <div class="flex items-center space-x-3">
+                <input type="checkbox"
+                       id="gp"
+                       th:field="*{gp}"
+                       class="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"/>
+                <label for="gp" class="text-sm font-semibold text-gray-700">
+                    Общопрактикуващ лекар (ОПЛ / Личен лекар)
+                </label>
+            </div>
+
+            <!-- Потребителски акаунт (незадължително) -->
+            <div th:if="${users != null and not #lists.isEmpty(users)}">
+                <label for="userId" class="block text-sm font-semibold text-gray-700 mb-1">
+                    Свързан потребителски акаунт
+                </label>
+                <select id="userId"
+                        th:field="*{userId}"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white transition-colors">
+                    <option value="">-- Без акаунт --</option>
+                    <option th:each="u : ${users}"
+                            th:value="${u.id}"
+                            th:text="${u.username}"></option>
+                </select>
+            </div>
+
+            <!-- Бутони -->
+            <div class="flex items-center space-x-3 pt-2">
+                <button type="submit"
+                        class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors">
+                    Запази
+                </button>
+                <a th:href="@{/doctors}"
+                   class="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-lg transition-colors">
+                    Отказ
+                </a>
+            </div>
+        </form>
+    </div>
+
+</div>
+</body>
+</html>

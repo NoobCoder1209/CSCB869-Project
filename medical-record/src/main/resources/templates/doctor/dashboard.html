@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="bg"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Лекарски портал</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">Лекарски портал</h1>
+        <p class="text-gray-500 mt-1">Добре дошли в личния Ви лекарски портал</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+
+        <!-- Информационна карта за лекаря -->
+        <div class="lg:col-span-1 bg-white rounded-xl shadow p-6">
+            <h2 class="text-lg font-semibold text-gray-700 mb-4 pb-2 border-b border-gray-200">
+                Вашите данни
+            </h2>
+            <div th:if="${doctor != null}" class="space-y-3">
+                <div>
+                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Пълно ime</p>
+                    <p class="text-gray-800 font-medium" th:text="${doctor.fullName}"></p>
+                </div>
+                <div>
+                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide">УИН</p>
+                    <p class="text-gray-800 font-mono" th:text="${doctor.uin}"></p>
+                </div>
+                <div>
+                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Специалност</p>
+                    <p class="text-gray-800">
+                        <span th:switch="${doctor.specialty?.name()}">
+                            <span th:case="'GENERAL_PRACTICE'">Обща медицина</span>
+                            <span th:case="'CARDIOLOGY'">Кардиология</span>
+                            <span th:case="'NEUROLOGY'">Неврология</span>
+                            <span th:case="'ORTHOPEDICS'">Ортопедия</span>
+                            <span th:case="'PEDIATRICS'">Педиатрия</span>
+                            <span th:case="'DERMATOLOGY'">Дерматология</span>
+                            <span th:case="'OPHTHALMOLOGY'">Офталмология</span>
+                            <span th:case="'SURGERY'">Хирургия</span>
+                            <span th:case="'PSYCHIATRY'">Психиатрия</span>
+                            <span th:case="'ENDOCRINOLOGY'">Ендокринология</span>
+                            <span th:case="'PULMONOLOGY'">Пулмология</span>
+                            <span th:case="*" th:text="${doctor.specialty}"></span>
+                        </span>
+                    </p>
+                </div>
+                <div>
+                    <p class="text-xs font-semibold text-gray-500 uppercase tracking-wide">Личен лекар (ОПЛ)</p>
+                    <span th:if="${doctor.gp}"
+                          class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">Да</span>
+                    <span th:unless="${doctor.gp}"
+                          class="px-2 py-1 bg-gray-100 text-gray-600 rounded-full text-xs font-medium">Не</span>
+                </div>
+            </div>
+            <div th:unless="${doctor != null}" class="text-gray-500 text-sm">
+                Не е намерен свързан лекарски профил.
+            </div>
+
+            <!-- Бутон за нов преглед -->
+            <div class="mt-6">
+                <a th:href="@{/examinations/new}"
+                   class="block w-full text-center px-4 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors">
+                    + Нов преглед
+                </a>
+            </div>
+        </div>
+
+        <!-- Бързи статистики -->
+        <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+            <div class="bg-white rounded-xl shadow p-5 flex items-center space-x-4">
+                <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center text-blue-700 text-lg font-bold">П</div>
+                <div>
+                    <p class="text-sm text-gray-500">Мои пациенти</p>
+                    <p class="text-2xl font-bold text-gray-800" th:text="${totalPatients ?: 0}">0</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow p-5 flex items-center space-x-4">
+                <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center text-purple-700 text-lg font-bold">Пр</div>
+                <div>
+                    <p class="text-sm text-gray-500">Общо прегледи</p>
+                    <p class="text-2xl font-bold text-gray-800" th:text="${totalExaminations ?: 0}">0</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow p-5 flex items-center space-x-4">
+                <div class="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center text-red-700 text-lg font-bold">Б</div>
+                <div>
+                    <p class="text-sm text-gray-500">Болнични листове</p>
+                    <p class="text-2xl font-bold text-gray-800" th:text="${totalSickLeaves ?: 0}">0</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-xl shadow p-5 flex items-center space-x-4">
+                <div class="w-12 h-12 bg-indigo-100 rounded-full flex items-center justify-center text-indigo-700 text-lg font-bold">О</div>
+                <div>
+                    <p class="text-sm text-gray-500">Отчети</p>
+                    <a th:href="@{/reports}"
+                       class="text-indigo-700 hover:text-indigo-800 font-semibold text-sm underline">
+                        Виж отчетите
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Последни прегледи -->
+    <div class="bg-white rounded-xl shadow overflow-hidden">
+        <div class="px-6 py-4 flex items-center justify-between border-b border-gray-200">
+            <h2 class="text-lg font-semibold text-gray-700">Последни прегледи</h2>
+            <a th:href="@{/examinations}"
+               class="text-sm text-blue-600 hover:text-blue-800 font-medium">
+                Всички прегледи &rarr;
+            </a>
+        </div>
+        <div th:if="${recentExaminations == null or #lists.isEmpty(recentExaminations)}"
+             class="p-8 text-center text-gray-500">
+            Нямате проведени прегледи.
+        </div>
+        <div th:unless="${recentExaminations == null or #lists.isEmpty(recentExaminations)}"
+             class="overflow-x-auto">
+            <table class="w-full text-sm">
+                <thead class="bg-gray-50 text-gray-600 border-b border-gray-200">
+                    <tr>
+                        <th class="px-4 py-3 text-left font-semibold">Дата</th>
+                        <th class="px-4 py-3 text-left font-semibold">Пациент</th>
+                        <th class="px-4 py-3 text-left font-semibold">Диагноза</th>
+                        <th class="px-4 py-3 text-right font-semibold">Цена</th>
+                        <th class="px-4 py-3 text-center font-semibold">Действия</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="exam, stat : ${recentExaminations}"
+                        th:classappend="${stat.even} ? 'bg-gray-50' : 'bg-white'"
+                        class="border-b border-gray-100 hover:bg-blue-50 transition-colors">
+                        <td class="px-4 py-3 text-gray-700"
+                            th:text="${#temporals.format(exam.examinationDate, 'dd.MM.yyyy')}"></td>
+                        <td class="px-4 py-3 font-medium text-gray-800"
+                            th:text="${exam.patient?.fullName}"></td>
+                        <td class="px-4 py-3 text-gray-600">
+                            <span th:if="${exam.diagnosis != null}"
+                                  th:text="${exam.diagnosis.code + ' - ' + exam.diagnosis.description}"></span>
+                        </td>
+                        <td class="px-4 py-3 text-right text-gray-800"
+                            th:text="${exam.price + ' лв.'}"></td>
+                        <td class="px-4 py-3 text-center">
+                            <a th:href="@{/examinations/{id}(id=${exam.id})}"
+                               class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white rounded text-xs font-medium transition-colors">
+                                Преглед
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Бързи връзки -->
+    <div class="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <a th:href="@{/patients}"
+           class="block bg-green-600 hover:bg-green-700 text-white text-center font-semibold rounded-lg p-4 transition-colors">
+            Списък пациенти
+        </a>
+        <a th:href="@{/sick-leaves}"
+           class="block bg-red-600 hover:bg-red-700 text-white text-center font-semibold rounded-lg p-4 transition-colors">
+            Болнични листове
+        </a>
+        <a th:href="@{/reports}"
+           class="block bg-indigo-600 hover:bg-indigo-700 text-white text-center font-semibold rounded-lg p-4 transition-colors">
+            Отчети и справки
+        </a>
+    </div>
+
+</div>
+</body>
+</html>

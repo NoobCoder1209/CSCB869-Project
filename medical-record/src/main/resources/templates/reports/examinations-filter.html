@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="bg"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Прегледи по лекар и период</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800">Прегледи по лекар и/или период</h1>
+            <p class="text-gray-500 text-sm mt-1">Отчет 9 от 11</p>
+        </div>
+        <a th:href="@{/reports}"
+           class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-lg transition-colors">
+            &larr; Към отчети
+        </a>
+    </div>
+
+    <!-- Форма за филтриране -->
+    <!-- Controller passes: doctors, examinations, selectedDoctorId, dateFrom, dateTo -->
+    <div class="bg-white rounded-xl shadow p-6 mb-6">
+        <form th:action="@{/reports/examinations-filter}" method="get"
+              class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+
+            <!-- Лекар (незадължителен) -->
+            <div>
+                <label for="doctorId" class="block text-sm font-semibold text-gray-700 mb-1">
+                    Лекар (незадължителен)
+                </label>
+                <select id="doctorId"
+                        name="doctorId"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
+                    <option value="">-- Всички лекари --</option>
+                    <option th:each="d : ${doctors}"
+                            th:value="${d.id}"
+                            th:text="${d.fullName}"
+                            th:selected="${selectedDoctorId != null and selectedDoctorId == d.id}"></option>
+                </select>
+            </div>
+
+            <!-- От дата -->
+            <div>
+                <label for="dateFrom" class="block text-sm font-semibold text-gray-700 mb-1">
+                    От дата
+                </label>
+                <input type="date"
+                       id="dateFrom"
+                       name="dateFrom"
+                       th:value="${dateFrom}"
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+            </div>
+
+            <!-- До дата -->
+            <div>
+                <label for="dateTo" class="block text-sm font-semibold text-gray-700 mb-1">
+                    До дата
+                </label>
+                <input type="date"
+                       id="dateTo"
+                       name="dateTo"
+                       th:value="${dateTo}"
+                       class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"/>
+            </div>
+
+            <!-- Бутон -->
+            <div>
+                <button type="submit"
+                        class="w-full px-6 py-2 bg-cyan-600 hover:bg-cyan-700 text-white font-semibold rounded-lg transition-colors">
+                    Филтрирай
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Резултати -->
+    <div class="bg-white rounded-xl shadow overflow-hidden" th:if="${examinations != null}">
+        <div th:if="${#lists.isEmpty(examinations)}" class="p-8 text-center text-gray-500">
+            Не са намерени прегледи по зададените критерии.
+        </div>
+        <div th:unless="${#lists.isEmpty(examinations)}">
+            <div class="px-6 py-3 bg-cyan-50 border-b border-cyan-100">
+                <span class="text-sm text-cyan-700 font-medium">
+                    Намерени прегледи: <strong th:text="${#lists.size(examinations)}">0</strong>
+                </span>
+            </div>
+            <div class="overflow-x-auto">
+                <table class="w-full text-sm">
+                    <thead class="bg-cyan-700 text-white">
+                        <tr>
+                            <th class="px-4 py-3 text-left font-semibold">Дата</th>
+                            <th class="px-4 py-3 text-left font-semibold">Лекар</th>
+                            <th class="px-4 py-3 text-left font-semibold">Пациент</th>
+                            <th class="px-4 py-3 text-left font-semibold">Диагноза</th>
+                            <th class="px-4 py-3 text-right font-semibold">Цена</th>
+                            <th class="px-4 py-3 text-center font-semibold">НЗОК</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="exam, stat : ${examinations}"
+                            th:classappend="${stat.even} ? 'bg-gray-50' : 'bg-white'"
+                            class="border-b border-gray-200">
+                            <td class="px-4 py-3 text-gray-700 whitespace-nowrap"
+                                th:text="${#temporals.format(exam.examinationDate, 'dd.MM.yyyy')}"></td>
+                            <td class="px-4 py-3 text-gray-700" th:text="${exam.doctor?.fullName}"></td>
+                            <td class="px-4 py-3 text-gray-700" th:text="${exam.patient?.fullName}"></td>
+                            <td class="px-4 py-3 text-gray-600">
+                                <span th:if="${exam.diagnosis != null}"
+                                      th:text="${exam.diagnosis.code + ' - ' + exam.diagnosis.description}"></span>
+                            </td>
+                            <td class="px-4 py-3 text-right font-medium text-gray-800"
+                                th:text="${exam.price + ' лв.'}"></td>
+                            <td class="px-4 py-3 text-center">
+                                <span th:if="${exam.paidByNhif}"
+                                      class="px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs">Да</span>
+                                <span th:unless="${exam.paidByNhif}"
+                                      class="px-2 py-1 bg-orange-100 text-orange-700 rounded-full text-xs">Не</span>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

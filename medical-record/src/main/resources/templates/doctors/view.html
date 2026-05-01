@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="bg"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      layout:decorate="~{layout}">
+<head>
+    <title>Информация за лекар</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-3xl font-bold text-gray-800">Информация за лекар</h1>
+        <a th:href="@{/doctors}"
+           class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-lg transition-colors">
+            &larr; Назад
+        </a>
+    </div>
+
+    <div class="bg-white rounded-xl shadow p-8 max-w-2xl">
+        <div class="grid grid-cols-1 gap-5">
+
+            <div class="flex border-b border-gray-100 pb-4">
+                <span class="w-48 text-sm font-semibold text-gray-500 uppercase tracking-wide">УИН</span>
+                <span class="text-gray-800 font-mono" th:text="${doctor.uin}"></span>
+            </div>
+
+            <div class="flex border-b border-gray-100 pb-4">
+                <span class="w-48 text-sm font-semibold text-gray-500 uppercase tracking-wide">Пълно ime</span>
+                <span class="text-gray-800 font-medium" th:text="${doctor.fullName}"></span>
+            </div>
+
+            <div class="flex border-b border-gray-100 pb-4">
+                <span class="w-48 text-sm font-semibold text-gray-500 uppercase tracking-wide">Специалност</span>
+                <span class="text-gray-800">
+                    <span th:switch="${doctor.specialty?.name()}">
+                        <span th:case="'GENERAL_PRACTICE'">Обща медицина</span>
+                        <span th:case="'CARDIOLOGY'">Кардиология</span>
+                        <span th:case="'NEUROLOGY'">Неврология</span>
+                        <span th:case="'ORTHOPEDICS'">Ортопедия</span>
+                        <span th:case="'PEDIATRICS'">Педиатрия</span>
+                        <span th:case="'DERMATOLOGY'">Дерматология</span>
+                        <span th:case="'OPHTHALMOLOGY'">Офталмология</span>
+                        <span th:case="'SURGERY'">Хирургия</span>
+                        <span th:case="'PSYCHIATRY'">Психиатрия</span>
+                        <span th:case="'ENDOCRINOLOGY'">Ендокринология</span>
+                        <span th:case="'PULMONOLOGY'">Пулмология</span>
+                        <span th:case="*" th:text="${doctor.specialty}"></span>
+                    </span>
+                </span>
+            </div>
+
+            <div class="flex border-b border-gray-100 pb-4">
+                <span class="w-48 text-sm font-semibold text-gray-500 uppercase tracking-wide">Личен лекар (ОПЛ)</span>
+                <span th:if="${doctor.gp}"
+                      class="px-3 py-1 bg-green-100 text-green-800 rounded-full text-sm font-medium">Да</span>
+                <span th:unless="${doctor.gp}"
+                      class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm font-medium">Не</span>
+            </div>
+
+            <div class="flex border-b border-gray-100 pb-4">
+                <span class="w-48 text-sm font-semibold text-gray-500 uppercase tracking-wide">Брой пациенти</span>
+                <span class="text-gray-800" th:text="${doctor.patients?.size() ?: 0}"></span>
+            </div>
+
+            <div class="flex">
+                <span class="w-48 text-sm font-semibold text-gray-500 uppercase tracking-wide">Потребителски акаунт</span>
+                <span class="text-gray-800" th:text="${doctor.user?.username ?: 'Няма свързан акаунт'}"></span>
+            </div>
+        </div>
+
+        <!-- Действия -->
+        <div class="mt-8 flex space-x-3">
+            <sec:authorize access="hasRole('ADMIN')">
+                <a th:href="@{/doctors/{id}/edit(id=${doctor.id})}"
+                   class="px-5 py-2 bg-yellow-500 hover:bg-yellow-600 text-white font-semibold rounded-lg transition-colors">
+                    Редактиране
+                </a>
+                <form th:action="@{/doctors/{id}/delete(id=${doctor.id})}" method="post"
+                      onsubmit="return confirm('Сигурни ли сте, че искате да изтриете този лекар?')">
+                    <button type="submit"
+                            class="px-5 py-2 bg-red-600 hover:bg-red-700 text-white font-semibold rounded-lg transition-colors">
+                        Изтриване
+                    </button>
+                </form>
+            </sec:authorize>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

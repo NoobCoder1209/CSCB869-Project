@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="bg"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title layout:title-pattern="$CONTENT_TITLE - Медицински досиета">Медицински досиета</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col">
+
+<!-- Навигационна лента -->
+<nav class="bg-blue-800 text-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex items-center justify-between h-16">
+            <!-- Лого / Начало -->
+            <div class="flex items-center space-x-8">
+                <a th:href="@{/}" class="text-xl font-bold tracking-wide hover:text-blue-200 transition-colors">
+                    Мед. Досиета
+                </a>
+
+                <!-- Навигационни линкове -->
+                <div class="hidden md:flex items-center space-x-4">
+
+                    <!-- Само за анонимни (неаутентицирани) -->
+                    <sec:authorize access="isAnonymous()">
+                        <a th:href="@{/login}"
+                           class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
+                            Вход
+                        </a>
+                    </sec:authorize>
+
+                    <!-- Начало за аутентицирани -->
+                    <sec:authorize access="isAuthenticated()">
+                        <!-- Начало - различни URL-и по роля -->
+                        <sec:authorize access="hasRole('ADMIN')">
+                            <a th:href="@{/admin}"
+                               class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
+                                Начало
+                            </a>
+                        </sec:authorize>
+                        <sec:authorize access="hasRole('DOCTOR')">
+                            <a th:href="@{/doctor}"
+                               class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
+                                Начало
+                            </a>
+                        </sec:authorize>
+                        <sec:authorize access="hasRole('PATIENT')">
+                            <a th:href="@{/patient}"
+                               class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
+                                Начало
+                            </a>
+                        </sec:authorize>
+
+                        <!-- Лекари: Администратор и Лекар -->
+                        <sec:authorize access="hasAnyRole('ADMIN', 'DOCTOR')">
+                            <a th:href="@{/doctors}"
+                               class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
+                                Лекари
+                            </a>
+                        </sec:authorize>
+
+                        <!-- Пациенти: Администратор и Лекар -->
+                        <sec:authorize access="hasAnyRole('ADMIN', 'DOCTOR')">
+                            <a th:href="@{/patients}"
+                               class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
+                                Пациенти
+                            </a>
+                        </sec:authorize>
+
+                        <!-- Диагнози: само Администратор -->
+                        <sec:authorize access="hasRole('ADMIN')">
+                            <a th:href="@{/diagnoses}"
+                               class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
+                                Диагнози
+                            </a>
+                        </sec:authorize>
+
+                        <!-- Прегледи: Администратор и Лекар -->
+                        <sec:authorize access="hasAnyRole('ADMIN', 'DOCTOR')">
+                            <a th:href="@{/examinations}"
+                               class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
+                                Прегледи
+                            </a>
+                        </sec:authorize>
+
+                        <!-- Болнични: Администратор и Лекар -->
+                        <sec:authorize access="hasAnyRole('ADMIN', 'DOCTOR')">
+                            <a th:href="@{/sick-leaves}"
+                               class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
+                                Болнични
+                            </a>
+                        </sec:authorize>
+
+                        <!-- Отчети: Администратор и Лекар -->
+                        <sec:authorize access="hasAnyRole('ADMIN', 'DOCTOR')">
+                            <a th:href="@{/reports}"
+                               class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
+                                Отчети
+                            </a>
+                        </sec:authorize>
+
+                        <!-- Осигуровки: само Администратор -->
+                        <sec:authorize access="hasRole('ADMIN')">
+                            <a th:href="@{/insurance}"
+                               class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
+                                Осигуровки
+                            </a>
+                        </sec:authorize>
+
+                        <!-- Потребители: само Администратор -->
+                        <sec:authorize access="hasRole('ADMIN')">
+                            <a th:href="@{/admin/users}"
+                               class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
+                                Потребители
+                            </a>
+                        </sec:authorize>
+
+                        <!-- Моите прегледи: само Пациент -->
+                        <sec:authorize access="hasRole('PATIENT')">
+                            <a th:href="@{/examinations}"
+                               class="px-3 py-2 rounded hover:bg-blue-700 transition-colors text-sm font-medium">
+                                Моите прегледи
+                            </a>
+                        </sec:authorize>
+                    </sec:authorize>
+                </div>
+            </div>
+
+            <!-- Потребителска информация и изход -->
+            <div class="flex items-center space-x-4">
+                <sec:authorize access="isAuthenticated()">
+                    <span class="text-sm text-blue-200">
+                        <sec:authentication property="name"/>
+                    </span>
+                    <form th:action="@{/logout}" method="post" class="inline">
+                        <button type="submit"
+                                class="px-3 py-2 bg-red-600 rounded hover:bg-red-700 transition-colors text-sm font-medium">
+                            Изход
+                        </button>
+                    </form>
+                </sec:authorize>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!-- Основно съдържание -->
+<main class="flex-1 max-w-7xl mx-auto w-full px-4 sm:px-6 lg:px-8 py-8">
+
+    <!-- Flash съобщения -->
+    <div th:if="${successMessage}"
+         class="mb-4 p-4 bg-green-100 border border-green-400 text-green-800 rounded-lg flex items-center justify-between">
+        <span th:text="${successMessage}"></span>
+        <button onclick="this.parentElement.remove()" class="ml-4 text-green-600 hover:text-green-800 font-bold">&times;</button>
+    </div>
+    <div th:if="${errorMessage}"
+         class="mb-4 p-4 bg-red-100 border border-red-400 text-red-800 rounded-lg flex items-center justify-between">
+        <span th:text="${errorMessage}"></span>
+        <button onclick="this.parentElement.remove()" class="ml-4 text-red-600 hover:text-red-800 font-bold">&times;</button>
+    </div>
+    <div th:if="${infoMessage}"
+         class="mb-4 p-4 bg-blue-100 border border-blue-400 text-blue-800 rounded-lg flex items-center justify-between">
+        <span th:text="${infoMessage}"></span>
+        <button onclick="this.parentElement.remove()" class="ml-4 text-blue-600 hover:text-blue-800 font-bold">&times;</button>
+    </div>
+
+    <!-- Съдържание от дъщерните шаблони -->
+    <div layout:fragment="content">
+        <!-- Тук се зарежда съдържанието на страницата -->
+    </div>
+</main>
+
+<!-- Долен колонтитул -->
+<footer class="bg-blue-900 text-blue-200 text-center py-4 text-sm mt-auto">
+    Електронни медицински досиета &copy; 2025
+</footer>
+
+</body>
+</html>

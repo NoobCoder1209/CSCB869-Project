@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="bg"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title th:text="${examinationDto.id != null ? 'Редактиране на преглед' : 'Нов преглед'}">Форма преглед</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-3xl font-bold text-gray-800"
+            th:text="${examinationId != null ? 'Редактиране на преглед' : 'Нов преглед'}">Форма преглед</h1>
+        <a th:href="@{/examinations}"
+           class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-lg transition-colors">
+            &larr; Назад
+        </a>
+    </div>
+
+    <div class="bg-white rounded-xl shadow p-8 max-w-2xl">
+        <form th:action="${examinationId != null ? '/examinations/' + examinationId : '/examinations'}"
+              th:object="${examinationDto}"
+              method="post"
+              class="space-y-6">
+
+            <!-- Дата на преглед -->
+            <div>
+                <label for="examinationDate" class="block text-sm font-semibold text-gray-700 mb-1">
+                    Дата на преглед <span class="text-red-500">*</span>
+                </label>
+                <input type="date"
+                       id="examinationDate"
+                       th:field="*{examinationDate}"
+                       th:classappend="${#fields.hasErrors('examinationDate')} ? 'border-red-500' : 'border-gray-300'"
+                       class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"/>
+                <p th:if="${#fields.hasErrors('examinationDate')}"
+                   th:errors="*{examinationDate}"
+                   class="mt-1 text-sm text-red-600"></p>
+            </div>
+
+            <!-- Лекар -->
+            <div>
+                <label for="doctorId" class="block text-sm font-semibold text-gray-700 mb-1">
+                    Лекар <span class="text-red-500">*</span>
+                </label>
+                <select id="doctorId"
+                        th:field="*{doctorId}"
+                        th:classappend="${#fields.hasErrors('doctorId')} ? 'border-red-500' : 'border-gray-300'"
+                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white transition-colors">
+                    <option value="">-- Изберете лекар --</option>
+                    <option th:each="doctor : ${doctors}"
+                            th:value="${doctor.id}"
+                            th:text="${doctor.fullName + ' (' + doctor.uin + ')'}"></option>
+                </select>
+                <p th:if="${#fields.hasErrors('doctorId')}"
+                   th:errors="*{doctorId}"
+                   class="mt-1 text-sm text-red-600"></p>
+            </div>
+
+            <!-- Пациент -->
+            <div>
+                <label for="patientId" class="block text-sm font-semibold text-gray-700 mb-1">
+                    Пациент <span class="text-red-500">*</span>
+                </label>
+                <select id="patientId"
+                        th:field="*{patientId}"
+                        th:classappend="${#fields.hasErrors('patientId')} ? 'border-red-500' : 'border-gray-300'"
+                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white transition-colors">
+                    <option value="">-- Изберете пациент --</option>
+                    <option th:each="patient : ${patients}"
+                            th:value="${patient.id}"
+                            th:text="${patient.fullName + ' (' + patient.egn + ')'}"></option>
+                </select>
+                <p th:if="${#fields.hasErrors('patientId')}"
+                   th:errors="*{patientId}"
+                   class="mt-1 text-sm text-red-600"></p>
+            </div>
+
+            <!-- Диагноза -->
+            <div>
+                <label for="diagnosisId" class="block text-sm font-semibold text-gray-700 mb-1">
+                    Диагноза <span class="text-red-500">*</span>
+                </label>
+                <select id="diagnosisId"
+                        th:field="*{diagnosisId}"
+                        th:classappend="${#fields.hasErrors('diagnosisId')} ? 'border-red-500' : 'border-gray-300'"
+                        class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white transition-colors">
+                    <option value="">-- Изберете диагноза --</option>
+                    <option th:each="diagnosis : ${diagnoses}"
+                            th:value="${diagnosis.id}"
+                            th:text="${diagnosis.code + ' - ' + diagnosis.description}"></option>
+                </select>
+                <p th:if="${#fields.hasErrors('diagnosisId')}"
+                   th:errors="*{diagnosisId}"
+                   class="mt-1 text-sm text-red-600"></p>
+            </div>
+
+            <!-- Лечение -->
+            <div>
+                <label for="treatment" class="block text-sm font-semibold text-gray-700 mb-1">
+                    Лечение <span class="text-red-500">*</span>
+                </label>
+                <textarea id="treatment"
+                          th:field="*{treatment}"
+                          rows="4"
+                          th:classappend="${#fields.hasErrors('treatment')} ? 'border-red-500' : 'border-gray-300'"
+                          class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors resize-none"
+                          placeholder="Опишете предписаното лечение..."></textarea>
+                <p th:if="${#fields.hasErrors('treatment')}"
+                   th:errors="*{treatment}"
+                   class="mt-1 text-sm text-red-600"></p>
+            </div>
+
+            <!-- Цена -->
+            <div>
+                <label for="price" class="block text-sm font-semibold text-gray-700 mb-1">
+                    Цена (лв.) <span class="text-red-500">*</span>
+                </label>
+                <input type="number"
+                       id="price"
+                       th:field="*{price}"
+                       step="0.01"
+                       min="0"
+                       th:classappend="${#fields.hasErrors('price')} ? 'border-red-500' : 'border-gray-300'"
+                       class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                       placeholder="0.00"/>
+                <p class="mt-1 text-xs text-gray-500">
+                    Забележка: плащането от НЗОК се изчислява автоматично спрямо здравно-осигурителния статус на пациента.
+                </p>
+                <p th:if="${#fields.hasErrors('price')}"
+                   th:errors="*{price}"
+                   class="mt-1 text-sm text-red-600"></p>
+            </div>
+
+            <!-- Бутони -->
+            <div class="flex items-center space-x-3 pt-2">
+                <button type="submit"
+                        class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors">
+                    Запази
+                </button>
+                <a th:href="@{/examinations}"
+                   class="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-lg transition-colors">
+                    Отказ
+                </a>
+            </div>
+        </form>
+    </div>
+
+</div>
+</body>
+</html>

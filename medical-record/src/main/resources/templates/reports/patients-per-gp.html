@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="bg"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title>Брой пациенти на личен лекар</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <div class="flex items-center justify-between mb-6">
+        <div>
+            <h1 class="text-3xl font-bold text-gray-800">Брой пациенти на личен лекар</h1>
+            <p class="text-gray-500 text-sm mt-1">Отчет 6 от 11</p>
+        </div>
+        <a th:href="@{/reports}"
+           class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-lg transition-colors">
+            &larr; Към отчети
+        </a>
+    </div>
+
+    <div class="bg-white rounded-xl shadow overflow-hidden">
+        <div th:if="${gpPatientCounts == null or #lists.isEmpty(gpPatientCounts)}"
+             class="p-8 text-center text-gray-500">
+            Няма данни.
+        </div>
+        <table th:unless="${gpPatientCounts == null or #lists.isEmpty(gpPatientCounts)}"
+               class="w-full text-sm">
+            <thead class="bg-teal-700 text-white">
+                <tr>
+                    <th class="px-4 py-3 text-left font-semibold">Личен лекар</th>
+                    <th class="px-4 py-3 text-right font-semibold">Брой пациенти</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="item, stat : ${gpPatientCounts}"
+                    th:classappend="${stat.even} ? 'bg-gray-50' : 'bg-white'"
+                    class="border-b border-gray-200">
+                    <td class="px-4 py-3 font-medium text-gray-800"
+                        th:text="${item.doctor?.fullName}"></td>
+                    <td class="px-4 py-3 text-right font-semibold text-teal-700"
+                        th:text="${item.patientCount}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>

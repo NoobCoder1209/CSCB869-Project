@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="bg"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorate="~{layout}">
+<head>
+    <title th:text="${sickLeaveId != null ? 'Редактиране на болничен лист' : 'Нов болничен лист'}">Форма болничен лист</title>
+</head>
+<body>
+<div layout:fragment="content">
+
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-3xl font-bold text-gray-800"
+            th:text="${sickLeaveId != null ? 'Редактиране на болничен лист' : 'Нов болничен лист'}">Форма болничен лист</h1>
+        <a th:href="@{/sick-leaves}"
+           class="px-4 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-lg transition-colors">
+            &larr; Назад
+        </a>
+    </div>
+
+    <div class="bg-white rounded-xl shadow p-8 max-w-xl">
+
+        <!-- Информация за свързания преглед -->
+        <div th:if="${examination != null}"
+             class="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
+            <p class="font-semibold mb-1">Свързан преглед:</p>
+            <p>
+                <span th:text="${#temporals.format(examination.examinationDate, 'dd.MM.yyyy')}"></span>
+                &mdash;
+                <span th:text="${examination.patient?.fullName}"></span>
+                &mdash;
+                <span th:text="${examination.doctor?.fullName}"></span>
+            </p>
+        </div>
+
+        <!--
+            New: POST /sick-leaves?examinationId=X
+            Edit: POST /sick-leaves/{id}
+        -->
+        <form th:action="${sickLeaveId != null
+                            ? '/sick-leaves/' + sickLeaveId
+                            : '/sick-leaves?examinationId=' + examinationId}"
+              th:object="${sickLeaveDto}"
+              method="post"
+              class="space-y-6">
+
+            <!-- Начална дата -->
+            <div>
+                <label for="startDate" class="block text-sm font-semibold text-gray-700 mb-1">
+                    Начална дата <span class="text-red-500">*</span>
+                </label>
+                <input type="date"
+                       id="startDate"
+                       th:field="*{startDate}"
+                       th:classappend="${#fields.hasErrors('startDate')} ? 'border-red-500' : 'border-gray-300'"
+                       class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"/>
+                <p th:if="${#fields.hasErrors('startDate')}"
+                   th:errors="*{startDate}"
+                   class="mt-1 text-sm text-red-600"></p>
+            </div>
+
+            <!-- Брой дни -->
+            <div>
+                <label for="numberOfDays" class="block text-sm font-semibold text-gray-700 mb-1">
+                    Брой дни <span class="text-red-500">*</span>
+                </label>
+                <input type="number"
+                       id="numberOfDays"
+                       th:field="*{numberOfDays}"
+                       min="1"
+                       max="365"
+                       th:classappend="${#fields.hasErrors('numberOfDays')} ? 'border-red-500' : 'border-gray-300'"
+                       class="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition-colors"
+                       placeholder="Въведете брой дни"/>
+                <p th:if="${#fields.hasErrors('numberOfDays')}"
+                   th:errors="*{numberOfDays}"
+                   class="mt-1 text-sm text-red-600"></p>
+            </div>
+
+            <!-- Бутони -->
+            <div class="flex items-center space-x-3 pt-2">
+                <button type="submit"
+                        class="px-6 py-2 bg-green-600 hover:bg-green-700 text-white font-semibold rounded-lg transition-colors">
+                    Запази
+                </button>
+                <a th:href="@{/sick-leaves}"
+                   class="px-6 py-2 bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold rounded-lg transition-colors">
+                    Отказ
+                </a>
+            </div>
+        </form>
+    </div>
+
+</div>
+</body>
+</html>
